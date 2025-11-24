@@ -1,0 +1,44 @@
+track_39_bigwig_file_names = [
+    "GSM5652176_Adipocytes-Z000000T7.hg38.bigwig",  # 0
+    "GSM5652179_Aorta-Endothel-Z00000422.hg38.bigwig", # 1
+    "GSM5652189_Kidney-Tubular-Endothel-Z0000042R.hg38.bigwig", # 2
+    "GSM5652198_Colon-Fibroblasts-Z0000042A.hg38.bigwig", # 3
+    "GSM5652200_Heart-Fibroblasts-Z0000043R.hg38.bigwig", # 4
+    "GSM5652204_Dermal-Fibroblasts-Z00000423.hg38.bigwig", # 5
+    "GSM5652205_Skeletal-Muscle-Z00000427.hg38.bigwig", # 6
+    "GSM5652207_Aorta-Smooth-Muscle-Z0000041U.hg38.bigwig", # 7
+    "GSM5652215_Heart-Cardiomyocyte-Z0000044P.hg38.bigwig", # 8
+    "GSM5652218_Bone-Osteoblasts-Z0000042Z.hg38.bigwig", # 9
+    "GSM5652219_Oligodendrocytes-Z000000TK.hg38.bigwig", # 10
+    "GSM5652223_Cortex-Neuron-Z000000TF.hg38.bigwig", # 11
+    "GSM5652233_Liver-Hepatocytes-Z000000R3.hg38.bigwig", # 12
+    "GSM5652239_Pancreas-Duct-Z0000043T.hg38.bigwig", # 13
+    "GSM5652243_Pancreas-Acinar-Z000000QX.hg38.bigwig", # 14
+    "GSM5652247_Pancreas-Delta-Z00000451.hg38.bigwig", # 15
+    "GSM5652250_Pancreas-Beta-Z00000452.hg38.bigwig", # 16
+    "GSM5652253_Pancreas-Alpha-Z00000453.hg38.bigwig", # 17
+    "GSM5652264_Thyroid-Epithelial-Z0000042S.hg38.bigwig", # 18
+    "GSM5652267_Fallopian-Epithelial-Z000000Q7.hg38.bigwig", # 19
+    "GSM5652270_Ovary-Epithelial-Z000000QT.hg38.bigwig", # 20
+    "GSM5652274_Bone_marrow-Erythrocyte_progenitors-Z000000RF.hg38.bigwig", # 21
+    "GSM5652277_Blood-T-CD3-Z000000TV.hg38.bigwig", # 22
+    "GSM5652299_Blood-NK-Z000000TM.hg38.bigwig", # 23
+    "GSM5652302_Blood-Monocytes-Z000000TP.hg38.bigwig", # 24
+    "GSM5652313_Blood-Granulocytes-Z000000TZ.hg38.bigwig", # 25
+    "GSM5652317_Blood-B-Z000000UB.hg38.bigwig", # 26
+    "GSM5652321_Epidermal-Keratinocytes-Z00000424.hg38.bigwig", # 27
+    "GSM5652322_Tonsil-Palatine-Epithelial-Z000000QF.hg38.bigwig", # 28
+    "GSM5652335_Lung-Bronchus-Epithelial-Z000000QD.hg38.bigwig", # 29
+    "GSM5652338_Prostate-Epithelial-Z000000RV.hg38.bigwig",  # 30
+    "GSM5652342_Bladder-Epithelial-Z000000QM.hg38.bigwig", # 31
+    "GSM5652347_Breast-Luminal-Epithelial-Z000000V2.hg38.bigwig", # 32
+    "GSM5652350_Breast-Basal-Epithelial-Z000000V6.hg38.bigwig", # 33
+    "GSM5652354_Lung-Alveolar-Epithelial-Z000000T1.hg38.bigwig", # 34
+    "GSM5652358_Gallbladder-Epithelial-Z00000432.hg38.bigwig", # 35
+    "GSM5652359_Gastric-fundus-Epithelial-Z000000RX.hg38.bigwig", # 36
+    "GSM5652370_Colon-Right-Epithelial-Z000000V0.hg38.bigwig", # 37
+    "GSM5652378_Small-int-Epithelial-Z0000042V.hg38.bigwig", # 38
+]
+
+track_39_names = [item_.replace(".hg38.bigwig", "") for item_ in track_39_bigwig_file_names]
+fa_path = './data/fasta/Homo_sapiens.GRCh38.dna.primary_assembly.fa'
