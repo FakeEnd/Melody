@@ -1,4 +1,8 @@
 # Melody: Decoding the Sequence Determinants of Locus-Specific DNA Methylation Across Human Tissues
+![image-20251125003954614](README.assets/image-20251125003954614.png)
+
+
+
 This repository contains the official implementation of Melody, a deep learning framework designed to decipher the DNA sequence determinants underlying human DNA methylation landscapes. Melody accurately predicts cell-type-specific methylation profiles and generalizes to unseen cell types via scRNA-seq integration.
 
 
