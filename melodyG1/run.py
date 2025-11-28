@@ -90,7 +90,8 @@ from stateless import sigmoid_first, get_bigwig_filepaths, check_args, config_mo
     update_eval_logs, get_score_metrics, get_best_step_and_metrics, methy2bin, load_ckpt, print_model_info, save_model, \
     get_pre_process_func, get_embedding, get_embedding_list
 
-from selene_sdk.sequences import Genome, GenomicDataset, RandomPositions, RandomPositionsSampler, SamplerDataLoader
+from selene_sdk.sequences import Genome
+from selene_util import GenomicSignalFeatures, RandomPositions, RandomPositionsSampler, SamplerDataLoader
 from cell_embedding import MelodyG
 from basic_blocks import make_cpg_and_valid_and_low_methy_mask_multi_track, get_alpha_tensor, \
     get_real_pred_and_cg_avg_loss_from_raw_model_output, collect_track_losses
@@ -118,8 +119,9 @@ pre_process_func: Callable = get_pre_process_func(args.meth_pre_process_func)
 test_track = ['Pancreas-Delta', 'Blood-Granulocytes', 'Blood-Monocytes', 'Aorta-Endothel', 'Cortex-Neuron']
 bigwig_files = [f for f in bigwig_files if not any(track in f for track in test_track)]
 track_names = [f for f in track_names if not any(track in f for track in test_track)]
-genome = Genome(input_path=args.genome_path, cuda=True if DEVICE == 'cuda' else False)
-methy_data = [GenomicDataset([m], genome, storage="BigWig") for m in bigwig_files]
+genome = Genome(input_path=args.genome_path, blacklist_regions='hg38')
+genome.get = genome.get_encoding_from_coords
+methy_data = [GenomicSignalFeatures([m], features=[m], shape=(10000,)) for m in bigwig_files]
 
 cell_embeddings = get_embedding_list(bigwig_files, args.cell_embedding_path)
 

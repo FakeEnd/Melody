@@ -13,7 +13,8 @@ GENOME_PATH = pdir + '/data/fasta/Homo_sapiens.GRCh38.dna.primary_assembly.fa'
 var_blocks_path = pdir + '/data/sample.csv'
 try:
     logger.info("Initializing Genome for validation (one-time setup)...")
-    genome = Genome(input_path=GENOME_PATH, cuda=True)
+    genome = Genome(input_path=GENOME_PATH, blacklist_regions='hg38')
+    genome.get = genome.get_encoding_from_coords
     logger.info("Waiting for genome object to initialize...")
     sleep(2)
     logger.success("Genome reader initialized globally.")

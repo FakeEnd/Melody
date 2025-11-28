@@ -2,9 +2,12 @@ import json
 from typing import Iterable
 
 import numpy as np
+import pyBigWig
+import tabix
 import torch
-
-from selene_sdk.sequences import Genome # original selene_sdk
+from selene_sdk.targets import Target
+from selene_sdk.sequences import Genome
+from selene_util import GenomicSignalFeatures, RandomPositions, RandomPositionsSampler, SamplerDataLoader
 
 class RandomPositionsSamplerMultiCell:
     """
@@ -142,7 +145,7 @@ class SequentialGenomeDataset(Dataset):
         The genome object, expected to have a `get_chr_lens()` method that
         returns a list of (chr_name, length) tuples, and a `get(chrom, start, end)`
         method to retrieve sequence data.
-    methy_data : GenomicDataset
+    methy_data 
         The methylation data object, also expected to have a `get(chrom, start, end)`
         method.
     chromosomes_to_scan : list of str
@@ -240,7 +243,7 @@ class SequentialGenomeDatasetWithEmbedding(Dataset):
         The genome object, expected to have a `get_chr_lens()` method that
         returns a list of (chr_name, length) tuples, and a `get(chrom, start, end)`
         method to retrieve sequence data.
-    methy_data : GenomicDataset
+    methy_data 
         The methylation data object, also expected to have a `get(chrom, start, end)`
         method.
     chromosomes_to_scan : list of str
@@ -375,3 +378,4 @@ class CellRegionDataset(Dataset):
 
 
             return seq, methy, np.mean(embedding, axis=0), cell_region_mask
+

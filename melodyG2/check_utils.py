@@ -24,7 +24,8 @@ from stateless import cleanup, sigmoid_first, load_ckpt, methy2bin, check_args, 
     get_pre_process_func
 from variable_blocks_util import get_scaled_blocks_from_variable_blocks_by_split_and_window
 
-from selene_sdk.sequences import Genome, GenomicDataset, RandomPositions
+from selene_sdk.sequences import Genome
+from selene_util import GenomicSignalFeatures, RandomPositions, RandomPositionsSampler, SamplerDataLoader
 
 def clean_seq_ndarray(sequence: ndarray | List | torch.Tensor) -> ndarray:
     if isinstance(sequence, List):
@@ -167,7 +168,7 @@ class GenomicRegionDataset(Dataset):
     def __init__(self,
                  runs: List[Tuple[str, int]],
                  genome: Genome,
-                 methy_data: GenomicDataset,
+                 methy_data,
                  see_length: int,
                  methy_data_process: Callable = None):
         self.runs = runs
@@ -212,7 +213,7 @@ class GenomicCellDataset(Dataset):
     def __init__(self,
                  runs: List[Tuple[str, int]],
                  genome: Genome,
-                 methy_data: GenomicDataset,
+                 methy_data,
                  cell_embedding,
                  see_length: int,
                  methy_data_process: Callable = None):
@@ -371,7 +372,7 @@ def extract_tissue_name_from_track_name(name):
 def check_runs_return_multiple_pic_dict_batched_calc_total(
         model: nn.Module,
         genome: Genome,
-        methy_data_dict: List[GenomicDataset],
+        methy_data_dict,
         cell_embedding_dict:List,
         track_names: List[str],
         see_length: int = 10000,
@@ -526,7 +527,7 @@ def extract_tissue_name_from_path(file_path):
 def check_runs_return_multiple_pic_dict_batched_calc_total_all(
         model: nn.Module,
         genome: Genome,
-        methy_data_list: List[GenomicDataset],
+        methy_data_list,
         # cell_embedding_dict,
         cell_embedding_list,
         track_names: List[str],

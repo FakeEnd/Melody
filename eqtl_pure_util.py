@@ -26,7 +26,8 @@ import copy
 from _config import pdir
 
 start_time_str = "_" + datetime.now().strftime("%Y%m%d_%H%M%S")
-from selene_sdk.sequences import Genome, GenomicDataset
+from selene_sdk.sequences import Genome
+from selene_util import GenomicSignalFeatures, RandomPositions, RandomPositionsSampler, SamplerDataLoader
 
 # Optimized GATC2onehot using a dictionary
 BASE_TO_ONEHOT = {

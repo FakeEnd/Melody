@@ -24,7 +24,8 @@ sys.path.append(str(Path(__file__).parent.parent.parent))
 sys.path.append(str(Path(__file__).parent.parent.parent.parent))
 from stateless import cleanup, sigmoid_first, load_ckpt, methy2bin
 from variable_blocks_util import get_scaled_blocks_from_variable_blocks_by_split_and_window
-from selene_sdk.sequences import Genome, GenomicDataset, RandomPositions
+from selene_sdk.sequences import Genome
+from selene_util import GenomicSignalFeatures, RandomPositions, RandomPositionsSampler, SamplerDataLoader
 
 
 import warnings
@@ -169,7 +170,7 @@ class GenomicRegionDataset(Dataset):
     def __init__(self,
                  runs: List[Tuple[str, int]],
                  genome: Genome,
-                 methy_data: GenomicDataset,
+                 methy_data,
                  see_length: int,
                  methy_data_process: Callable = None):
         self.runs = runs
@@ -276,7 +277,7 @@ def process_single_track(track_name, track_data, calc_corr_using_original_myth):
 def check_runs_return_multiple_pic_dict_batched_calc_total(
         model: nn.Module,
         genome: Genome,
-        methy_data: GenomicDataset,
+        methy_data,
         track_names: List[str],
         see_length: int = 10000,
         batch_size: int = 32,

@@ -29,7 +29,8 @@ from global_constants import track_39_bigwig_file_names
 from stateless import cleanup, sigmoid_first, load_ckpt, methy2bin, get_bigwig_filepaths, get_pre_process_func, \
     get_embedding_list, check_args, get_embedding
 from variable_blocks_util import get_scaled_blocks_from_variable_blocks_by_split_and_window
-from selene_sdk.sequences import Genome, GenomicDataset, RandomPositions
+from selene_sdk.sequences import Genome
+from selene_util import GenomicSignalFeatures, RandomPositions, RandomPositionsSampler, SamplerDataLoader
 
 def clean_seq_ndarray(sequence: ndarray | List | torch.Tensor) -> ndarray:
     if isinstance(sequence, List):
@@ -180,7 +181,7 @@ class GenomicRegionDataset(Dataset):
     def __init__(self,
                  runs: List[Tuple[str, int]],
                  genome: Genome,
-                 methy_data: GenomicDataset,
+                 methy_data,
                  see_length: int,
                  methy_data_process: Callable = None):
         self.runs = runs
@@ -225,7 +226,7 @@ class GenomicCellDataset(Dataset):
     def __init__(self,
                  runs: List[Tuple[str, int]],
                  genome: Genome,
-                 methy_data: GenomicDataset,
+                 methy_data,
                  cell_embedding,
                  see_length: int,
                  methy_data_process: Callable = None):
@@ -304,7 +305,7 @@ def genomic_collate_fn(batch: List[Dict[str, Any]]) -> Dict[str, Any]:
 def check_runs_return_multiple_pic_dict_batched_calc_total(
         model: nn.Module,
         genome: Genome,
-        methy_data_list: List[GenomicDataset],
+        methy_data_list,
         cell_embedding_list:List,
         track_names: List[str],
         see_length: int = 10000,
@@ -462,7 +463,7 @@ def extract_tissue_name_from_path(file_path):
 def check_runs_return_multiple_pic_dict_batched_calc_total_all(
         model: nn.Module,
         genome: Genome,
-        methy_data_list: List[GenomicDataset],
+        methy_data_list,
         # cell_embedding_dict,
         cell_embedding_list,
         track_names: List[str],
@@ -875,8 +876,9 @@ if __name__ == '__main__':
 
     test_track = ['Pancreas-Delta', 'Blood-Granulocytes', 'Blood-Monocytes', 'Aorta-Endothel', 'Cortex-Neuron']
 
-    genome = Genome(input_path=args.genome_path, cuda=True if DEVICE == 'cuda' else False)
-    methy_data = [GenomicDataset([m], genome, storage="BigWig") for m in bigwig_files]
+    genome = Genome(input_path=args.genome_path, blacklist_regions='hg38')
+    genome.get = genome.get_encoding_from_coords
+    methy_data = [GenomicSignalFeatures([m], features=[m], shape=(10000,)) for m in bigwig_files]
 
     cell_embeddings = get_embedding_list(bigwig_files, args.cell_embedding_path)
 

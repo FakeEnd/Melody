@@ -73,7 +73,8 @@ args = parser.parse_args()
 args = check_args(args)
 # os.environ["CUDA_VISIBLE_DEVICES"] = f"{args.gpu}"
 from models import Melody
-from selene_sdk.sequences import Genome, GenomicDataset, RandomPositions, RandomPositionsSampler, SamplerDataLoader
+from selene_sdk.sequences import Genome
+from selene_util import GenomicSignalFeatures, RandomPositions, RandomPositionsSampler, SamplerDataLoader
 
 from basic_blocks import make_cpg_and_valid_and_low_methy_mask_multi_track, get_alpha_tensor, \
     get_real_pred_and_cg_avg_loss_from_raw_model_output, collect_track_losses
@@ -86,8 +87,9 @@ func_ = sigmoid_first
 BATCH_SIZE, WINDOW_SIZE, SEED, DEVICE = args.batch_size, args.window_size, args.seed, 'cuda'
 bigwig_files, track_names = get_bigwig_filepaths(dir_=args.bigwigs_dir, filenames=args.bigwigs_files, fallback_dirs=['/root/autodl-tmp/39', ])
 pre_process_func: Callable = get_pre_process_func(args.meth_pre_process_func)
-genome = Genome(input_path=args.genome_path, cuda=True if DEVICE == 'cuda' else False)
-methy_data = GenomicDataset(bigwig_files, genome, storage='BigWig')
+genome = Genome(input_path=args.genome_path, blacklist_regions='hg38')
+genome.get = genome.get_encoding_from_coords
+methy_data = GenomicSignalFeatures(bigwig_files, features=bigwig_files, shape=(10000,))
 
 
 if args.model_cls == 'Melody':

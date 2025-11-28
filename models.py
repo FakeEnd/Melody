@@ -7,14 +7,15 @@ from torch import nn
 from basic_blocks import ConvBlock
 from global_constants import track_39_names
 
-from selene_sdk.sequences import Genome, GenomicDataset
+from selene_sdk.sequences import Genome
+from selene_util import GenomicSignalFeatures, RandomPositions, RandomPositionsSampler, SamplerDataLoader
 
 class CSVGnomeDataset(torch.utils.data.Dataset):
     def __init__(
         self,
         path,
         genome: Genome,
-        methy_data: GenomicDataset,
+        methy_data,
         randi=True,
         shift_range=500,
         sample_length=10000
