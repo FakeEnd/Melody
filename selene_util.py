@@ -182,8 +182,18 @@ class RandomPositionsSampler:
                  mode: str = "train",
                  seed: int = 436):
 
-        self.reference_sequence = reference_sequence
-        self.target = target
+        if isinstance(reference_sequence, (list, tuple)) and len(reference_sequence) == 2:
+            if isinstance(target, RandomPositions):
+                self.reference_sequence = reference_sequence[0]
+                self.target = reference_sequence[1]
+                self._position_sampler = target
+            else:
+                self.reference_sequence = reference_sequence[0]
+                self.target = reference_sequence[1]
+        else:
+            self.reference_sequence = reference_sequence
+            self.target = target
+
         self.features = list(features) if features is not None else None
 
         self.sequence_length = int(sequence_length)
@@ -194,15 +204,16 @@ class RandomPositionsSampler:
         np.random.seed(seed)
         torch.manual_seed(seed)
 
-        self._position_sampler = RandomPositions(
-            genome=reference_sequence,
-            sample_length=sequence_length,
-            position_resolution=position_resolution,
-            validation_holdout=validation_holdout,
-            test_holdout=test_holdout,
-            blacklist_chroms=blacklist_chroms,
-            mode=mode,
-        )
+        if not hasattr(self, '_position_sampler'):
+            self._position_sampler = RandomPositions(
+                genome=self.reference_sequence,
+                sample_length=sequence_length,
+                position_resolution=position_resolution,
+                validation_holdout=validation_holdout,
+                test_holdout=test_holdout,
+                blacklist_chroms=blacklist_chroms,
+                mode=mode,
+            )
 
     @property
     def mode(self) -> str:
