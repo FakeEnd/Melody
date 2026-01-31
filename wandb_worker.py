@@ -7,13 +7,20 @@ from loguru import logger
 import wandb
 
 class WandbWorker:
-    def __init__(self, args: Namespace = Namespace(project='Melody')):
+    def __init__(self, args: Namespace = Namespace(use_swanlab=False, project='Melody')):
         self.wandb_inited = False
         self.log_queue = Queue()
-        self.wandb = wandb
-        self.project_name = args.project
-        self.lab_name = getattr(args, 'lab_name', 'default_lab')
         self.args = args
+        self.wandb = wandb
+        if getattr(args, "use_swanlab", False):
+            try:
+                import swanlab
+            except Exception as e:
+                raise RuntimeError("use_swanlab=True but swanlab is not installed") from e
+            self.wandb = swanlab
+
+        self.project_name = getattr(args, "project", "Melody")
+        self.lab_name = getattr(args, 'lab_name', 'default_lab')
         self.logging_thread = threading.Thread(target=self.wandb_logger_worker, args=(self.log_queue,), daemon=True)
         self.logging_thread.start()
         atexit.register(self.shutdown_wandb_logger)
@@ -50,4 +57,3 @@ class WandbWorker:
 
     def log(self, log_dict, i):
         self.log_queue.put({'log_dict': log_dict, 'kwargs': {'step': i}})
-

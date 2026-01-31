@@ -142,7 +142,7 @@ class RandomPositions:
         chrom_len = int(self._active_lengths[idx])
 
         start_min = self._start_radius
-        start_max = chrom_len - self._end_radius
+        start_max = chrom_len - self._end_radius + 1
         if start_max <= start_min:
             raise RuntimeError(
                 f"Chromosome {chrom} (len={chrom_len}) is too short for "
@@ -248,6 +248,26 @@ class RandomPositionsSampler:
             return "+"
         return "+" if np.random.rand() < 0.5 else "-"
 
+    def _fix_length(self, seq: np.ndarray, y: Optional[np.ndarray]) -> Tuple[np.ndarray, Optional[np.ndarray]]:
+        target_len = self.sequence_length
+        seq_len = seq.shape[0]
+        if seq_len != target_len:
+            if seq_len > target_len:
+                seq = seq[:target_len]
+            else:
+                pad_len = target_len - seq_len
+                seq = np.pad(seq, ((0, pad_len), (0, 0)), mode="constant")
+        if y is not None:
+            y_len = y.shape[-1]
+            if y_len != target_len:
+                if y_len > target_len:
+                    y = y[..., :target_len]
+                else:
+                    pad_len = target_len - y_len
+                    pad_width = [(0, 0)] * (y.ndim - 1) + [(0, pad_len)]
+                    y = np.pad(y, pad_width, mode="constant")
+        return seq, y
+
     def _single_sample(self) -> Tuple[np.ndarray, Optional[np.ndarray]]:
 
         chrom, start, end = self._position_sampler.sample()
@@ -263,11 +283,13 @@ class RandomPositionsSampler:
         seq = np.asarray(seq, dtype=np.float32)
 
         if self.target is None:
+            seq, _ = self._fix_length(seq, None)
             return seq, None
 
         y = self.target.get_feature_data(chrom, start, end)
         y = np.asarray(y, dtype=np.float32)
 
+        seq, y = self._fix_length(seq, y)
         return seq, y
 
     def sample(self,
@@ -281,7 +303,6 @@ class RandomPositionsSampler:
             sequences.append(seq)
             if targets is not None:
                 targets.append(y)
-
         sequences = np.stack(sequences, axis=0)
 
         if targets is None:
